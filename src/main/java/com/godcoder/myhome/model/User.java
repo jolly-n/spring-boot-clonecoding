@@ -19,12 +19,19 @@ public class User {
     private Boolean enabled; //권한상태
 
     @ManyToMany //다대다 매핑
+    @JsonIgnore
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true) //orphanRemoval:부모가 없는 데이터를 삭제
+    /**
+     * 서로 연관된 두 테이블 간 조회방법 설정
+     * fetch 타입 : EAGER, LAZY(사용될 때 조회)
+     */
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true) //orphanRemoval:부모가 없는 데이터를 삭제
+//    @JsonIgnore
     private List<Board> boards = new ArrayList<>();
 }

@@ -3,6 +3,7 @@ package com.godcoder.myhome.controller;
 import com.godcoder.myhome.model.Board;
 import com.godcoder.myhome.model.User;
 import com.godcoder.myhome.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.util.StringUtils;
@@ -11,24 +12,25 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
+@Slf4j
 public class UserApiController {
 
     @Autowired
     private UserRepository repository;
 
-    // Aggregate root
-    // tag::get-aggregate-root[]
     @GetMapping
     List<User> all() {
-        return repository.findAll();
+        List<User> users = repository.findAll();
+        log.debug("getBoards().size() 호출전");
+        log.debug("getBoards().size() : {}", users.get(0).getBoards().size());
+        log.debug("getBoards().size() 호출후");
+        return users;
     }
 
     @PostMapping
     User newUser(@RequestBody User newUser) {
         return repository.save(newUser);
     }
-
-    // Single item
 
     @GetMapping("/{id}")
     User one(@PathVariable Long id) {
